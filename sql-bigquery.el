@@ -78,16 +78,16 @@ The buffer with name BUFFER will be used or created."
 
 (sql-add-product 'bigquery "BigQuery"
                  :free-software t
-                   :list-all "SELECT * FROM INFORMATION_SCHEMA.SCHEMATA"
-                   :list-table "SELECT * FROM %s.INFORMATION_SCHEMA.TABLES;"
-                   :prompt-regexp "^[^>]*> "
-                   :prompt-cont-regexp "^[ ]+-> "
-                   :sqli-comint-func 'sql-bigquery-comint
-                   :font-lock 'sql-mode-ansi-font-lock-keywords
-                   :sqli-login sql-bigquery-login-params
-                   :sqli-program 'sql-bigquery-program
-                   :sqli-options 'sql-bigquery-options
-                   :input-filter '(sql-escape-newlines-filter sql-bigquery-input-filter))
+                 :list-all "SELECT * FROM INFORMATION_SCHEMA.SCHEMATA"
+                 :list-table "SELECT * FROM %s.INFORMATION_SCHEMA.TABLES;"
+                 :prompt-regexp "^[^>]*> "
+                 :prompt-cont-regexp "^[ ]+-> "
+                 :sqli-comint-func 'sql-bigquery-comint
+                 :font-lock 'sql-mode-ansi-font-lock-keywords
+                 :sqli-login sql-bigquery-login-params
+                 :sqli-program 'sql-bigquery-program
+                 :sqli-options 'sql-bigquery-options
+                 :input-filter '(sql-escape-newlines-filter sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
