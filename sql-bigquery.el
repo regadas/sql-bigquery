@@ -77,7 +77,7 @@ The buffer with name BUFFER will be used or created."
   (sql-product-interactive 'bigquery buffer))
 
 (sql-add-product 'bigquery "BigQuery"
-                 '(:free-software t
+                 :free-software t
                    :list-all "SELECT * FROM INFORMATION_SCHEMA.SCHEMATA"
                    :list-table "SELECT * FROM %s.INFORMATION_SCHEMA.TABLES;"
                    :prompt-regexp "^[^>]*> "
@@ -87,7 +87,7 @@ The buffer with name BUFFER will be used or created."
                    :sqli-login sql-bigquery-login-params
                    :sqli-program 'sql-bigquery-program
                    :sqli-options 'sql-bigquery-options
-                   :input-filter '(sql-escape-newlines-filter sql-bigquery-input-filter)))
+                   :input-filter '(sql-escape-newlines-filter sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
