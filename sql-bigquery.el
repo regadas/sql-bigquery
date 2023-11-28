@@ -65,7 +65,7 @@ the SQLi buffer to be named."
 
 (defun sql-bigquery-input-filter (string)
   "Turn input into a query command."
-  (setq string (concat "query \"" string "\""))
+  (setq string (concat "query --nouse_legacy_sql '" string "'"))
   string)
 
 ;;;###autoload
