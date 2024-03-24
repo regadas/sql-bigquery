@@ -68,6 +68,15 @@ the SQLi buffer to be named."
   (setq string (concat "query --nouse_legacy_sql '" string "'"))
   string)
 
+(defun sql-bigquery-remove-newlines (sql-string)
+  "Remove newline characters from a SQL string."
+  (let ((result ""))
+    (dolist (char (string-to-list sql-string))
+      (if (or (char-equal char ?\n) (char-equal char ?\r))
+          (setq result (concat result " ")) ; Replace newline or carriage return with space
+        (setq result (concat result (string char)))))
+    result))
+
 ;;;###autoload
 (defun sql-bigquery (&optional buffer)
   "Run BigQuery as an inferior process.
@@ -87,7 +96,7 @@ The buffer with name BUFFER will be used or created."
                  :sqli-login sql-bigquery-login-params
                  :sqli-program 'sql-bigquery-program
                  :sqli-options 'sql-bigquery-options
-                 :input-filter '(sql-escape-newlines-filter sql-bigquery-input-filter))
+                 :input-filter '(sql-bigquery-remove-newlines sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
