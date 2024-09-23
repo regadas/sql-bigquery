@@ -69,13 +69,13 @@ the SQLi buffer to be named."
   string)
 
 (defun sql-bigquery-remove-newlines (sql-string)
-  "Remove newline characters from a SQL string."
-  (let ((result ""))
-    (dolist (char (string-to-list sql-string))
-      (if (or (char-equal char ?\n) (char-equal char ?\r))
-          (setq result (concat result " ")) ; Replace newline or carriage return with space
-        (setq result (concat result (string char)))))
-    result))
+  "Remove newline and carriage return characters from a SQL string."
+  (replace-regexp-in-string "[\n\r]+" " " sql-string))
+
+;;; Escape quotes
+(defun sql-bigquery-escape-quotes (sql-string)
+  "Escape single and double quotes in the SQL-STRING for BigQuery."
+  (replace-regexp-in-string "\\(['\"]\\)" "\\1\\1" sql-string))
 
 ;;;###autoload
 (defun sql-bigquery (&optional buffer)
@@ -96,7 +96,7 @@ The buffer with name BUFFER will be used or created."
                  :sqli-login sql-bigquery-login-params
                  :sqli-program 'sql-bigquery-program
                  :sqli-options 'sql-bigquery-options
-                 :input-filter '(sql-bigquery-remove-newlines sql-bigquery-input-filter))
+                 :input-filter '(sql-bigquery-remove-newlines sql-bigquery-escape-quotes sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
