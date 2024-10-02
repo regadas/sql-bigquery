@@ -46,7 +46,7 @@
   :type 'sql-login-params
   :group 'sql-bigquery)
 
-(defcustom sql-bigquery-options '("--format" "pretty")
+(defcustom sql-bigquery-options '("--quiet" "--format" "pretty")
   "List of options for `sql-bigquery-program'."
   :type '(repeat string)
   :group 'sql-bigquery)
