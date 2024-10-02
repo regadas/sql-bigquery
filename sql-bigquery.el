@@ -46,7 +46,7 @@
   :type 'sql-login-params
   :group 'sql-bigquery)
 
-(defcustom sql-bigquery-options '("--format" "pretty")
+(defcustom sql-bigquery-options '("--quiet" "--format" "pretty")
   "List of options for `sql-bigquery-program'."
   :type '(repeat string)
   :group 'sql-bigquery)
@@ -65,17 +65,12 @@ the SQLi buffer to be named."
 
 (defun sql-bigquery-input-filter (string)
   "Turn input into a query command."
-  (setq string (concat "query --nouse_legacy_sql '" string "'"))
+  (setq string (concat "query --nouse_legacy_sql \"" string "\""))
   string)
 
 (defun sql-bigquery-remove-newlines (sql-string)
   "Remove newline and carriage return characters from a SQL string."
   (replace-regexp-in-string "[\n\r]+" " " sql-string))
-
-;;; Escape quotes
-(defun sql-bigquery-escape-quotes (sql-string)
-  "Escape single and double quotes in the SQL-STRING for BigQuery."
-  (replace-regexp-in-string "\\(['\"]\\)" "\\1\\1" sql-string))
 
 ;;;###autoload
 (defun sql-bigquery (&optional buffer)
@@ -96,7 +91,7 @@ The buffer with name BUFFER will be used or created."
                  :sqli-login sql-bigquery-login-params
                  :sqli-program 'sql-bigquery-program
                  :sqli-options 'sql-bigquery-options
-                 :input-filter '(sql-bigquery-remove-newlines sql-bigquery-escape-quotes sql-bigquery-input-filter))
+                 :input-filter '(sql-bigquery-remove-newlines sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
