@@ -1,12 +1,14 @@
-;;; sql-bigquery --- Adds Bigquery support to SQLi mode. -*- lexical-binding: t -*-
+;;; sql-bigquery.el --- Adds BigQuery support to SQLi mode. -*- lexical-binding: t -*-
 
 ;; Copyright 2020- Martin Nowak <code+sql-bigquery@dawg.eu>
+;; Copyright 2024- Filipe Regadas <oss@regadas.email>
 
 ;; Author: Martin Nowak <code+sql-bigquery@dawg.eu>
-;; Version: 0.5.0
+;; Maintainer: Filipe Regadas <oss@regadas.email>
+;; Version: 0.6.0
 ;; Keywords: sql, bigquery
-;; Package-Requires: ((emacs "24.4"))
-;; URL: https://github.com/MartinNowak/sql-bigquery
+;; Package-Requires: ((emacs "25.1"))
+;; URL: https://github.com/regadas/sql-bigquery
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,11 +31,13 @@
 ;; queries. It depends on an installed and functional 'google-cloud-sdk'.
 
 ;;; Code:
+
 (require 'sql)
+(require 'seq)
 
 (defgroup sql-bigquery nil
   "Use BigQuery with sql-interactive mode."
-  :group 'SQL
+  :group 'sql
   :prefix "sql-bigquery-")
 
 (defcustom sql-bigquery-program "bq"
@@ -43,7 +47,7 @@
 
 (defcustom sql-bigquery-login-params '(database)
   "Parameters needed to connect to BigQuery."
-  :type 'sql-login-params
+  :type '(repeat symbol)
   :group 'sql-bigquery)
 
 (defcustom sql-bigquery-options '("--quiet" "--format" "pretty")
