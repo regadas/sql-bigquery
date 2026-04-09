@@ -1,4 +1,4 @@
-;;; sql-bigquery.el --- Adds BigQuery support to SQLi mode. -*- lexical-binding: t -*-
+;;; sql-bigquery.el --- Adds BigQuery support to SQLi mode -*- lexical-binding: t -*-
 
 ;; Copyright 2020- Martin Nowak <code+sql-bigquery@dawg.eu>
 ;; Copyright 2024- Filipe Regadas <oss@regadas.email>
@@ -6,7 +6,7 @@
 ;; Author: Martin Nowak <code+sql-bigquery@dawg.eu>
 ;; Maintainer: Filipe Regadas <oss@regadas.email>
 ;; Version: 0.6.0
-;; Keywords: sql, bigquery
+;; Keywords: languages, sql, bigquery
 ;; Package-Requires: ((emacs "25.1"))
 ;; URL: https://github.com/regadas/sql-bigquery
 
@@ -58,7 +58,7 @@
 ;; BigQuery-specific font-lock keywords following the 5-tier pattern
 ;; used by built-in sql.el products.
 
-(defvar sql-mode-bigquery-font-lock-keywords
+(defvar sql-bigquery-font-lock-keywords
   (eval-when-compile
     (list
      ;; Types
@@ -294,7 +294,7 @@ The buffer with name BUFFER will be used or created."
                  :terminator '("." . "")
                  :completion-object 'sql-bigquery-completion-object
                  :sqli-comint-func 'sql-bigquery-comint
-                 :font-lock 'sql-mode-bigquery-font-lock-keywords
+                 :font-lock 'sql-bigquery-font-lock-keywords
                  :sqli-login sql-bigquery-login-params
                  :sqli-program 'sql-bigquery-program
                  :sqli-options 'sql-bigquery-options
