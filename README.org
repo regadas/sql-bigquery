@@ -1,0 +1,104 @@
+#+title: sql-bigquery
+#+author: Filipe Regadas
+
+BigQuery support for Emacs [[https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#SQL-Mode][SQLi mode]]. Connects to Google's =bq= CLI shell
+and provides syntax highlighting, tab completion, and quote-aware query
+transformations.
+
+* Installation
+
+Requires Emacs 25.1+ and the [[https://cloud.google.com/sdk][Google Cloud SDK]] (=bq= must be in your =PATH=).
+
+** straight.el
+
+#+begin_src emacs-lisp
+(straight-use-package '(sql-bigquery :type git :host github :repo "regadas/sql-bigquery"))
+#+end_src
+
+** use-package + straight
+
+#+begin_src emacs-lisp
+(use-package sql-bigquery
+  :straight (:host github :repo "regadas/sql-bigquery"))
+#+end_src
+
+** Manual
+
+Clone the repo and add it to your =load-path=:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/sql-bigquery")
+(require 'sql-bigquery)
+#+end_src
+
+* Usage
+
+1. Authenticate with Google Cloud:
+
+   #+begin_src sh
+   gcloud auth login
+   #+end_src
+
+2. Start a BigQuery shell:
+
+   =M-x sql-bigquery=
+
+   You will be prompted for a project ID (the =database= login parameter).
+
+3. Open a =.sql= file, set the product to BigQuery:
+
+   =M-x sql-set-product RET bigquery RET=
+
+4. Send queries to the shell:
+
+   | Key binding | Command            | Description                |
+   |-------------+--------------------+----------------------------|
+   | =C-c C-b=     | =sql-send-buffer=    | Send the entire buffer     |
+   | =C-c C-r=     | =sql-send-region=    | Send the selected region   |
+   | =C-c C-c=     | =sql-send-paragraph= | Send the current paragraph |
+
+   For queries with blank-line-separated CTEs, use =C-c C-b= or select
+   the full query with =C-c C-r= to avoid paragraph splitting.
+
+* Features
+
+** Syntax highlighting
+
+Five-tier font-lock covering BigQuery types, constants, keywords, 100+
+builtin functions (aggregates, date/time, string, regex, JSON, geography,
+window/analytic, math, hash, net), and clause modifiers.
+
+** Tab completion
+
+Schema and table name completion via =INFORMATION_SCHEMA= queries.
+
+** Quote-aware transformations
+
+The input filter pipeline collapses multi-line queries and converts line
+comments (=--=) to block comments (=/* */=) before sending to =bq shell=.
+It correctly preserves content inside:
+
+- Single-quoted strings (='hello'=)
+- Double-quoted strings (="hello"=)
+- Triple-quoted strings (='''multi\nline'''=)
+- Backtick-quoted identifiers (=`project.dataset.table`=)
+
+** Output format
+
+Switch the output format for future sessions:
+
+=M-x sql-bigquery-set-format=
+
+Options: =pretty=, =json=, =csv=, =sparse=, =prettyjson=.
+
+* Customization
+
+| Variable                  | Default                         | Description                   |
+|---------------------------+---------------------------------+-------------------------------|
+| =sql-bigquery-program=      | ="bq"=                            | Path to the =bq= executable     |
+| =sql-bigquery-login-params= | =(database)=                      | Login parameters prompted for |
+| =sql-bigquery-options=      | =("--quiet" "--format" "pretty")= | CLI options for =bq shell=      |
+
+* License
+
+GPL v3 — see [[file:LICENSE][LICENSE]].
