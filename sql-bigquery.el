@@ -260,13 +260,21 @@ the SQLi buffer to be named."
 
 
 (defun sql-bigquery-set-format (fmt)
-  "Set BigQuery output format for the current session.
-FMT is one of: pretty, json, csv, sparse, prettyjson."
+  "Set BigQuery output format for future sessions.
+FMT is one of: pretty, json, csv, sparse, prettyjson.
+Does not affect the currently running bq shell process."
   (interactive
    (list (completing-read "Format: "
                           '("pretty" "json" "csv" "sparse" "prettyjson")
                           nil t)))
-  (setq sql-bigquery-options `("--quiet" "--format" ,fmt)))
+  (let ((opts sql-bigquery-options)
+        result)
+    (while opts
+      (if (equal (car opts) "--format")
+          (setq opts (cddr opts))
+        (push (pop opts) result)))
+    (setq sql-bigquery-options
+          (nconc (nreverse result) (list "--format" fmt)))))
 
 ;;;###autoload
 (defun sql-bigquery (&optional buffer)
@@ -276,20 +284,23 @@ The buffer with name BUFFER will be used or created."
   (interactive "P")
   (sql-product-interactive 'bigquery buffer))
 
+;; Remove stale registration so the file can be reloaded cleanly.
+(setq sql-product-alist (assq-delete-all 'bigquery sql-product-alist))
 (sql-add-product 'bigquery "BigQuery"
                  :free-software t
-                 :list-all "SELECT * FROM INFORMATION_SCHEMA.SCHEMATA;"
-                 :list-table "SELECT * FROM %s.INFORMATION_SCHEMA.TABLES;"
-                 :prompt-regexp "^[a-zA-Z][a-zA-Z0-9_:-]*> "
-                 :prompt-cont-regexp "^[ ]+-> "
-                 :terminator '(";" . ";")
+                 :list-all "query --nouse_legacy_sql 'SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA'"
+                 :list-table "query --nouse_legacy_sql 'SELECT table_name FROM `%s`.INFORMATION_SCHEMA.TABLES'"
+                 :prompt-regexp "^[a-z][a-z0-9._:-]+> "
+                 :terminator '("." . "")
                  :completion-object 'sql-bigquery-completion-object
                  :sqli-comint-func 'sql-bigquery-comint
                  :font-lock 'sql-mode-bigquery-font-lock-keywords
                  :sqli-login sql-bigquery-login-params
                  :sqli-program 'sql-bigquery-program
                  :sqli-options 'sql-bigquery-options
-                 :input-filter '(sql-bigquery-line-comments-to-block sql-bigquery-collapse-lines sql-bigquery-input-filter))
+                 :input-filter '(sql-bigquery-line-comments-to-block
+                                 sql-bigquery-collapse-lines
+                                 sql-bigquery-input-filter))
 
 (provide 'sql-bigquery)
 ;;; sql-bigquery.el ends here
