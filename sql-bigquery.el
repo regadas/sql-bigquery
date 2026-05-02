@@ -28,7 +28,7 @@
 ;;; Commentary:
 
 ;; This package adds comint support for the BigQuery CLI shell to run
-;; queries. It depends on an installed and functional 'google-cloud-sdk'.
+;; queries.  It depends on an installed and functional 'google-cloud-sdk'.
 
 ;;; Code:
 
@@ -240,8 +240,8 @@ bypasses the input-filter chain."
 (defun sql-bigquery-comint (product options &optional buffer-name)
   "Connect to BigQuery in a comint buffer.
 
-PRODUCT is the sql product (bigquery). OPTIONS are any additional
-options to pass to bigquery-shell. BUFFER-NAME is what you'd like
+PRODUCT is the sql product (bigquery).  OPTIONS are any additional
+options to pass to bigquery-shell.  BUFFER-NAME is what you'd like
 the SQLi buffer to be named."
   (let ((params (append '("shell")
                         (unless (string= "" sql-database)
